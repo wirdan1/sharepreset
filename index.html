@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AM Preset Hub | Alight Motion Presets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8a2be2;
+            --primary-dark: #7b1fa2;
+            --secondary: #b388ff;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f5f5f5;
+            --gray: #9e9e9e;
+            --whatsapp: #25d366;
+            --dana: #00b1f2;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--darker);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+        }
+
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo img {
+            height: 42px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+
+        .logo img:hover {
+            transform: translateY(-2px) rotate(2deg);
+        }
+
+        .logo h1 {
+            font-size: 1.6rem;
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(138, 43, 226, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, white, var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--gray);
+            font-size: 1.1rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        /* Search Section */
+        .search-section {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .search-box {
+            display: flex;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #searchInput {
+            flex: 1;
+            padding: 16px 24px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        #searchInput:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        #searchBtn {
+            padding: 0 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #searchBtn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Presets Section */
+        .presets-section {
+            padding: 40px 0 80px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        /* Preset Card with Auto-Playing Video */
+        .presets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .preset-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            animation: fadeInUp 0.5s ease-out;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .preset-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(138, 43, 226, 0.4);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background-color: black;
+        }
+
+        .preset-info {
+            padding: 20px;
+        }
+
+        .preset-id {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .creator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .creator i {
+            font-size: 12px;
+        }
+
+        .preset-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .link-item i {
+            color: var(--primary);
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Floating Action Buttons */
+        .floating-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .floating-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        .whatsapp-btn {
+            background-color: var(--whatsapp);
+        }
+
+        .dana-btn {
+            background-color: var(--dana);
+        }
+
+        .tooltip {
+            position: absolute;
+            right: 70px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 15px;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
+        }
+
+        .floating-btn:hover .tooltip {
+            opacity: 1;
+            right: 80px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .presets-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .floating-buttons {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .floating-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <img src="media/nama.jpg" alt="Alight Motion Logo">
+                <h1>AM Preset Hub</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Discover & Share Alight Motion Presets</h2>
+            <p>Browse our collection of premium presets or contribute your own creations to the community</p>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search presets by ID...">
+                <button id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Presets Section -->
+    <section class="presets-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured Presets</h2>
+            </div>
+            <div class="presets-grid" id="presetsContainer">
+                <!-- Presets will be loaded here -->
+                <div class="loading-container">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Action Buttons -->
+    <div class="floating-buttons">
+        <div class="floating-btn whatsapp-btn">
+            <i class="fab fa-whatsapp"></i>
+            <span class="tooltip">WhatsApp: 0895323195263</span>
+        </div>
+        <div class="floating-btn dana-btn">
+            <i class="fas fa-donate"></i>
+            <span class="tooltip">DANA: 0895323195263</span>
+        </div>
+    </div>
+
+    <script>
+        // Load presets data
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check URL for preset ID
+            const urlParams = new URLSearchParams(window.location.search);
+            const presetId = urlParams.get('id');
+            
+            // Load presets data
+            fetch('media/preset.json')
+                .then(response => response.json())
+                .then(data => {
+                    displayPresets(data);
+                    
+                    // If there's a preset ID in URL, scroll to it
+                    if (presetId) {
+                        setTimeout(() => {
+                            const element = document.getElementById(presetId);
+                            if (element) {
+                                element.scrollIntoView({ behavior: 'smooth' });
+                                element.classList.add('highlight-preset');
+                            }
+                        }, 500);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading presets:', error);
+                    document.getElementById('presetsContainer').innerHTML = 
+                        '<p style="text-align: center; color: var(--secondary);">Error loading presets. Please try again later.</p>';
+                });
+            
+            // Setup search functionality
+            document.getElementById('searchBtn').addEventListener('click', function() {
+                const searchTerm = document.getElementById('searchInput').value.trim();
+                if (searchTerm) {
+                    window.location.href = `?id=${searchTerm}`;
+                }
+            });
+            
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('searchBtn').click();
+                }
+            });
+        });
+
+        // Display presets in the grid
+        function displayPresets(presets) {
+            const container = document.getElementById('presetsContainer');
+            container.innerHTML = '';
+            
+            if (presets.length === 0) {
+                container.innerHTML = '<p style="text-align: center;">No presets found.</p>';
+                return;
+            }
+            
+            // Show random preset first as featured
+            const randomIndex = Math.floor(Math.random() * presets.length);
+            const featuredPreset = presets[randomIndex];
+            container.appendChild(createPresetCard(featuredPreset, true));
+            
+            // Show all other presets
+            presets.forEach((preset, index) => {
+                if (index !== randomIndex) {
+                    container.appendChild(createPresetCard(preset));
+                }
+            });
+            
+            // Initialize all videos to autoplay muted
+            document.querySelectorAll('.video-container video').forEach(video => {
+                video.muted = true;
+                video.loop = true;
+                video.playsInline = true;
+                video.play().catch(e => console.log("Autoplay prevented:", e));
+            });
+        }
+
+        // Create preset card element
+        function createPresetCard(preset, isFeatured = false) {
+            const presetCard = document.createElement('div');
+            presetCard.className = 'preset-card';
+            presetCard.id = preset.id;
+            
+            if (isFeatured) {
+                presetCard.classList.add('featured-preset');
+            }
+            
+            presetCard.innerHTML = `
+                <div class="video-container">
+                    <video autoplay muted loop playsinline>
+                        <source src="${preset.url_video}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="preset-info">
+                    <h3 class="preset-id">${preset.id}</h3>
+                    ${preset.creator ? `
+                    <div class="creator">
+                        <i class="fas fa-user"></i>
+                        <span>${preset.creator}</span>
+                    </div>
+                    ` : ''}
+                    <div class="preset-links">
+                        <div class="link-item">
+                            <i class="fas fa-file-archive"></i>
+                            <a href="${preset.link_download}" target="_blank">Download Preset</a>
+                        </div>
+                        <div class="link-item">
+                            <i class="fas fa-code"></i>
+                            <a href="${preset.link_xml}" target="_blank">XML File</a>
+                        </div>
+                        ${preset.link_tiktok ? `
+                        <div class="link-item">
+                            <i class="fab fa-tiktok"></i>
+                            <a href="${preset.link_tiktok}" target="_blank">TikTok Example</a>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            return presetCard;
+        }
+
+        // Add highlight animation
+        const style = document.createElement('style');
+        style.textContent = `
+            .highlight-preset {
+                animation: highlight 2s ease-in-out;
+                border: 2px solid var(--primary);
+            }
+            @keyframes highlight {
+                0% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7); }
+                70% { box-shadow: 0 0 0 15px rgba(138, 43, 226, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0); }
+            }
+            .featured-preset {
+                position: relative;
+            }
+            .featured-preset::after {
+                content: 'FEATURED';
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background-color: var(--primary);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 0.7rem;
+                font-weight: bold;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
