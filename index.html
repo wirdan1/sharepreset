@@ -452,7 +452,51 @@
     </div>
 
     <script>
-        // Enhanced displayPresets function
+        // Load presets data
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check URL for preset ID
+            const urlParams = new URLSearchParams(window.location.search);
+            const presetId = urlParams.get('id');
+            
+            // Load presets data
+            fetch('media/preset.json')
+                .then(response => response.json())
+                .then(data => {
+                    displayPresets(data);
+                    
+                    // If there's a preset ID in URL, scroll to it
+                    if (presetId) {
+                        setTimeout(() => {
+                            const element = document.getElementById(presetId);
+                            if (element) {
+                                element.scrollIntoView({ behavior: 'smooth' });
+                                element.classList.add('highlight-preset');
+                            }
+                        }, 500);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading presets:', error);
+                    document.getElementById('presetsContainer').innerHTML = 
+                        '<p style="text-align: center; color: var(--secondary);">Error loading presets. Please try again later.</p>';
+                });
+            
+            // Setup search functionality
+            document.getElementById('searchBtn').addEventListener('click', function() {
+                const searchTerm = document.getElementById('searchInput').value.trim();
+                if (searchTerm) {
+                    window.location.href = `?id=${searchTerm}`;
+                }
+            });
+            
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('searchBtn').click();
+                }
+            });
+        });
+
+        // Display presets in the grid
         function displayPresets(presets) {
             const container = document.getElementById('presetsContainer');
             container.innerHTML = '';
@@ -474,31 +518,16 @@
                 }
             });
             
-            // Initialize all videos
-            document.querySelectorAll('.video-wrapper video').forEach(video => {
-                // Auto-play muted by default (for mobile compatibility)
+            // Initialize all videos to autoplay muted
+            document.querySelectorAll('.video-container video').forEach(video => {
                 video.muted = true;
                 video.loop = true;
                 video.playsInline = true;
-                
-                // Try to play with sound if allowed
-                video.play().catch(e => {
-                    console.log("Autoplay prevented:", e);
-                    // Fallback to muted autoplay
-                    video.muted = true;
-                    video.play();
-                });
-                
-                // Add click-to-unmute functionality
-                video.addEventListener('click', function() {
-                    this.muted = !this.muted;
-                    const icon = this.parentElement.querySelector('.sound-btn i');
-                    icon.className = this.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
-                });
+                video.play().catch(e => console.log("Autoplay prevented:", e));
             });
         }
 
-        // Enhanced createPresetCard function
+        // Create preset card element
         function createPresetCard(preset, isFeatured = false) {
             const presetCard = document.createElement('div');
             presetCard.className = 'preset-card';
@@ -508,31 +537,12 @@
                 presetCard.classList.add('featured-preset');
             }
             
-            // Detect aspect ratio from URL or use default
-            const aspectRatio = preset.url_video.includes('9-16') ? 'ratio-9-16' : 
-                              preset.url_video.includes('1-1') ? 'ratio-1-1' :
-                              preset.url_video.includes('16-9') ? 'ratio-16-9' :
-                              'ratio-9-16'; // Default
-            
             presetCard.innerHTML = `
-                <div class="video-container ${aspectRatio}">
-                    <div class="video-wrapper">
-                        <video autoplay loop playsinline>
-                            <source src="${preset.url_video}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <div class="video-controls">
-                            <button class="control-btn play-pause-btn">
-                                <i class="fas fa-pause"></i>
-                            </button>
-                            <button class="control-btn sound-btn">
-                                <i class="fas fa-volume-mute"></i>
-                            </button>
-                            <button class="control-btn fullscreen-btn">
-                                <i class="fas fa-expand"></i>
-                            </button>
-                        </div>
-                    </div>
+                <div class="video-container">
+                    <video autoplay muted loop playsinline>
+                        <source src="${preset.url_video}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
                 <div class="preset-info">
                     <h3 class="preset-id">${preset.id}</h3>
@@ -564,43 +574,35 @@
             return presetCard;
         }
 
-        // Add event listeners after DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // [Previous DOMContentLoaded code...]
-            
-            // Video controls functionality
-            document.addEventListener('click', function(e) {
-                // Play/pause
-                if (e.target.closest('.play-pause-btn')) {
-                    const video = e.target.closest('.video-wrapper').querySelector('video');
-                    if (video.paused) {
-                        video.play();
-                        e.target.closest('.play-pause-btn').innerHTML = '<i class="fas fa-pause"></i>';
-                    } else {
-                        video.pause();
-                        e.target.closest('.play-pause-btn').innerHTML = '<i class="fas fa-play"></i>';
-                    }
-                }
-                
-                // Sound toggle
-                if (e.target.closest('.sound-btn')) {
-                    const video = e.target.closest('.video-wrapper').querySelector('video');
-                    video.muted = !video.muted;
-                    e.target.closest('.sound-btn').innerHTML = 
-                        video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
-                }
-                
-                // Fullscreen
-                if (e.target.closest('.fullscreen-btn')) {
-                    const videoWrapper = e.target.closest('.video-wrapper');
-                    if (videoWrapper.requestFullscreen) {
-                        videoWrapper.requestFullscreen();
-                    } else if (videoWrapper.webkitRequestFullscreen) {
-                        videoWrapper.webkitRequestFullscreen();
-                    }
-                }
-            });
-        });
+        // Add highlight animation
+        const style = document.createElement('style');
+        style.textContent = `
+            .highlight-preset {
+                animation: highlight 2s ease-in-out;
+                border: 2px solid var(--primary);
+            }
+            @keyframes highlight {
+                0% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7); }
+                70% { box-shadow: 0 0 0 15px rgba(138, 43, 226, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0); }
+            }
+            .featured-preset {
+                position: relative;
+            }
+            .featured-preset::after {
+                content: 'FEATURED';
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background-color: var(--primary);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 0.7rem;
+                font-weight: bold;
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
